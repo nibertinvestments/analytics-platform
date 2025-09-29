@@ -34,7 +34,7 @@
     "react-chartjs-2": "^5.2.0",
     "recharts": "^2.12.0",
     "socket.io-client": "^4.7.0",
-    "@google-cloud/analytics-data": "^4.7.0"
+    "@google-analytics/data": "^5.2.0"
   },
   "devDependencies": {
     "@types/node": "^20.14.0",

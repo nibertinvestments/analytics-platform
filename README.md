@@ -6,8 +6,6 @@
 [![Node.js](https://img.shields.io/badge/Node.js-43853D?logo=node.js&logoColor=white)](https://nodejs.org/)
 [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-316192?logo=postgresql&logoColor=white)](https://www.postgresql.org/)
 
-# Analytics Platform
-
 A comprehensive business intelligence dashboard with real-time analytics, data visualization, and multi-source data integration.
 
 ## 🚀 Quick Setup
@@ -155,14 +153,6 @@ The project includes GitHub Actions workflows that:
 5. **Build dashboard components** for data visualization
 6. **Set up real-time WebSocket** connections
 7. **Integrate data sources** and analytics
-
-## 🤝 Contributing
-
-See [CONTRIBUTING.md](CONTRIBUTING.md) for detailed contribution guidelines.
-
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ## 🚀 Features
 
