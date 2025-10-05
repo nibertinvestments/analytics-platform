@@ -391,11 +391,13 @@ analytics-platform/
 │
 ├── .github/                     # GitHub workflows and templates
 │   ├── workflows/             # CI/CD workflows
+│   ├── instructions/          # MCP server instructions
+│   ├── copilot-instructions.md # GitHub Copilot instructions
 │   └── ISSUE_TEMPLATE/        # Issue templates
 │
 ├── docker-compose.yml           # Docker Compose configuration
 ├── AGENT.md                     # AI agent instructions
-├── Copilot-instructions.md      # GitHub Copilot instructions
+├── Copilot-instructions.md      # GitHub Copilot instructions (deprecated, see .github/copilot-instructions.md)
 ├── PROJECT_ROADMAP.md           # Development roadmap
 └── README.md                    # This file
 ```
