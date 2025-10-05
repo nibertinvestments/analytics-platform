@@ -6,7 +6,153 @@
 [![Node.js](https://img.shields.io/badge/Node.js-43853D?logo=node.js&logoColor=white)](https://nodejs.org/)
 [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-316192?logo=postgresql&logoColor=white)](https://www.postgresql.org/)
 
-**Enterprise-grade Business Intelligence Dashboard** with real-time monitoring, multi-data source connections, and advanced analytics capabilities. Built for scale, security, and performance.
+A comprehensive business intelligence dashboard with real-time analytics, data visualization, and multi-source data integration.
+
+## 🚀 Quick Setup
+
+The project is now configured with Google Cloud integration and CI/CD pipeline. Follow these steps to get started:
+
+### Prerequisites
+- Node.js 18+ 
+- Google Cloud CLI
+- Docker (for containerization)
+- Git
+
+### 1. Clone and Install
+```bash
+git clone https://github.com/nibertinvestments/analytics-platform.git
+cd analytics-platform
+npm install
+```
+
+### 2. Environment Setup
+```bash
+# Copy environment templates
+cp backend/.env.example backend/.env
+cp frontend/.env.example frontend/.env.local
+
+# Update the .env files with your actual configuration
+# Your Google Cloud credentials are already set in .env
+```
+
+### 3. Google Cloud Setup
+```bash
+# Authenticate with Google Cloud
+gcloud auth login
+
+# Set your project
+gcloud config set project 618807536247
+
+# Run the setup script to create GCP resources
+chmod +x infrastructure/gcp/setup.sh
+./infrastructure/gcp/setup.sh
+```
+
+### 4. GitHub Secrets Setup
+For CI/CD to work, set up GitHub repository secrets:
+```bash
+# View the setup instructions
+cat infrastructure/gcp/github-secrets-setup.sh
+```
+
+### 5. Development
+```bash
+# Start all services in development mode
+npm run dev
+
+# Or start individually
+npm run dev:backend    # Backend API (port 3001)
+npm run dev:frontend   # Frontend app (port 3000)
+```
+
+## 🔧 Available Commands
+
+### Root Level
+- `npm run dev` - Start both frontend and backend in development mode
+- `npm run build` - Build all applications for production
+- `npm test` - Run all tests
+- `npm run lint` - Run linting across all packages
+
+### Backend Commands
+- `npm run dev --workspace=backend` - Start backend development server
+- `npm run test --workspace=backend` - Run backend tests
+- `npm run db:migrate --workspace=backend` - Run database migrations
+- `npm run db:seed --workspace=backend` - Seed database with sample data
+
+### Frontend Commands  
+- `npm run dev --workspace=frontend` - Start frontend development server
+- `npm run build --workspace=frontend` - Build frontend for production
+- `npm run test --workspace=frontend` - Run frontend tests
+
+## 🌐 Service URLs
+
+- **Frontend**: http://localhost:3000
+- **Backend API**: http://localhost:3001
+- **Health Check**: http://localhost:3001/health
+- **API Documentation**: http://localhost:3001/docs (coming soon)
+
+## 🔄 CI/CD Pipeline
+
+The project includes GitHub Actions workflows that:
+- ✅ Run tests for frontend and backend
+- ✅ Perform security scanning
+- ✅ Build and push Docker images to GCR
+- ✅ Deploy to Google Cloud Run
+- ✅ Run health checks
+
+### Deployment Environments
+- **Staging**: Deploys on pushes to `develop` branch
+- **Production**: Deploys on pushes to `main` branch (with approval)
+
+## 🔒 Security Features
+
+- Helmet.js for security headers
+- Rate limiting
+- CORS configuration  
+- Input validation
+- Security vulnerability scanning in CI/CD
+- Environment variable protection
+
+## 📦 Tech Stack
+
+### Frontend
+- **Next.js 14** with App Router
+- **TypeScript** for type safety
+- **Tailwind CSS** for styling
+- **Jest** & **React Testing Library** for testing
+
+### Backend
+- **Node.js** with **Express.js**
+- **TypeScript** for type safety
+- **Prisma** ORM (ready for database integration)
+- **Jest** & **Supertest** for testing
+
+### Infrastructure
+- **Google Cloud Run** for container hosting
+- **Google Cloud SQL** for PostgreSQL database
+- **Google Memorystore** for Redis caching
+- **Google Cloud Storage** for file storage
+- **Google Pub/Sub** for message queuing
+
+## 🎯 Current Status
+
+✅ Project structure created
+✅ Package configurations set up
+✅ CI/CD pipeline configured
+✅ Google Cloud integration ready
+✅ Basic test framework implemented
+✅ Docker containers configured
+✅ Environment variables protected
+
+## 📋 Next Steps
+
+1. **Set up GitHub Secrets** using the provided script
+2. **Configure database** by running the GCP setup script  
+3. **Create database schemas** using Prisma migrations
+4. **Implement authentication** system
+5. **Build dashboard components** for data visualization
+6. **Set up real-time WebSocket** connections
+7. **Integrate data sources** and analytics
 
 ## 🚀 Features
 
