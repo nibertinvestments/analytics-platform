@@ -1,0 +1,41 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "linux-musl-openssl-3.0.x"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String
+  firstName String?
+  lastName  String?
+  role      Role     @default(USER)
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations will be added in future phases
+  @@map("users")
+}
+
+enum Role {
+  USER
+  ADMIN
+  ANALYST
+}
+
+// Additional models will be added as we progress through the roadmap
+// - Organizations
+// - Teams  
+// - Dashboards
+// - Analytics Data
+// - Reports
+// - etc.
