@@ -229,6 +229,13 @@ Next.js provides detailed error messages in development mode. Check the browser 
 
 ## Common Issues
 
+### DNS Restrictions and Firewall Blocks
+
+If you're working in an environment with DNS restrictions (like GitHub Actions), see the [DNS Restrictions Guide](dns-restrictions.md) for details on:
+- Prisma binary download workarounds
+- Google Fonts access issues
+- CI/CD configuration for restricted environments
+
 ### Port Already in Use
 
 If you get port errors:
