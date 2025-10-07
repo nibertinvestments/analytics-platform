@@ -1,6 +1,8 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { useRouter } from 'next/navigation'
+import Link from 'next/link'
 import { 
   BarChart3, 
   Users, 
@@ -31,9 +33,28 @@ interface ApiResponse {
 }
 
 export default function Home() {
+  const router = useRouter()
   const [analyticsData, setAnalyticsData] = useState<AnalyticsEvent[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [isAuthenticated, setIsAuthenticated] = useState(false)
+  const [userName, setUserName] = useState('')
+
+  // Check authentication status
+  useEffect(() => {
+    const token = localStorage.getItem('accessToken')
+    const user = localStorage.getItem('user')
+    
+    if (token && user) {
+      setIsAuthenticated(true)
+      try {
+        const userData = JSON.parse(user)
+        setUserName(userData.name || userData.email)
+      } catch (e) {
+        console.error('Failed to parse user data')
+      }
+    }
+  }, [])
 
   // Calculate metrics from real API data
   const metrics: MetricCard[] = [
@@ -95,6 +116,14 @@ export default function Home() {
     fetchData()
   }, [])
 
+  const handleSignOut = () => {
+    localStorage.removeItem('accessToken')
+    localStorage.removeItem('refreshToken')
+    localStorage.removeItem('user')
+    setIsAuthenticated(false)
+    router.push('/signin')
+  }
+
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
@@ -106,12 +135,42 @@ export default function Home() {
               <h1 className="text-2xl font-bold text-gray-900">Analytics Platform</h1>
             </div>
             <nav className="flex items-center space-x-6">
-              <a href="#" className="text-sm font-medium text-blue-600">Dashboard</a>
-              <a href="#" className="text-sm font-medium text-gray-600 hover:text-gray-900">Reports</a>
-              <a href="#" className="text-sm font-medium text-gray-600 hover:text-gray-900">Settings</a>
-              <button className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700">
-                Sign Out
-              </button>
+              <Link href="/" className="text-sm font-medium text-blue-600">
+                Dashboard
+              </Link>
+              <Link href="/reports" className="text-sm font-medium text-gray-600 hover:text-gray-900">
+                Reports
+              </Link>
+              <Link href="/settings" className="text-sm font-medium text-gray-600 hover:text-gray-900">
+                Settings
+              </Link>
+              
+              {isAuthenticated ? (
+                <div className="flex items-center space-x-4">
+                  <span className="text-sm text-gray-600">Hello, {userName}</span>
+                  <button 
+                    onClick={handleSignOut}
+                    className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700"
+                  >
+                    Sign Out
+                  </button>
+                </div>
+              ) : (
+                <div className="flex items-center space-x-3">
+                  <Link 
+                    href="/signin"
+                    className="px-4 py-2 text-sm font-medium text-gray-700 hover:text-gray-900"
+                  >
+                    Sign In
+                  </Link>
+                  <Link 
+                    href="/signup"
+                    className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700"
+                  >
+                    Sign Up
+                  </Link>
+                </div>
+              )}
             </nav>
           </div>
         </div>
