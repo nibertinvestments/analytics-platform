@@ -1,7 +1,7 @@
 import crypto from 'node:crypto'
 
 import bcrypt from 'bcrypt'
-import jwt, { type Secret, type SignOptions } from 'jsonwebtoken'
+import jwt from 'jsonwebtoken'
 
 import { environment } from '../config/environment'
 import { sessionRepository } from '../repositories/session.repository'
@@ -53,12 +53,10 @@ const generateAccessToken = (user: Awaited<ReturnType<typeof userRepository.crea
     role: user.role,
   }
 
-  const secret: Secret = environment.auth.jwtSecret
-  const options: SignOptions = {
-    expiresIn: environment.auth.jwtExpiresIn as SignOptions['expiresIn'],
-  }
-
-  return jwt.sign(payload, secret, options)
+  // Use any to bypass strict typing for expiresIn
+  return jwt.sign(payload, environment.auth.jwtSecret, {
+    expiresIn: environment.auth.jwtExpiresIn,
+  } as any)
 }
 
 const generateRefreshToken = async (userId: string) => {
