@@ -5,12 +5,16 @@ import { config } from 'dotenv'
 config({ path: '.env.test' })
 
 // Mock console.log in tests to reduce noise
-global.console = {
+const consoleMock = {
   ...console,
   log: jest.fn(),
   debug: jest.fn(),
   info: jest.fn(),
 }
+
+Object.defineProperty(globalThis, 'console', {
+  value: consoleMock,
+})
 
 // Set test timeout
 jest.setTimeout(30000)

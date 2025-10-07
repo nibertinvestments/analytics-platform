@@ -1,40 +1,19 @@
 import request from 'supertest'
-import express from 'express'
 
-// Create a basic Express app for testing
-const createTestApp = () => {
-  const app = express()
-  
-  app.use(express.json())
-  
-  // Health check endpoint
-  app.get('/health', (req, res) => {
-    res.status(200).json({
-      status: 'ok',
-      timestamp: new Date().toISOString(),
-      service: 'analytics-backend'
-    })
-  })
-  
-  // Basic API endpoint
-  app.get('/api/analytics', (req, res) => {
-    res.status(200).json({
-      success: true,
-      data: [
-        { id: 1, metric: 'users', value: 100 },
-        { id: 2, metric: 'sessions', value: 250 }
-      ]
-    })
-  })
-  
-  return app
-}
+jest.mock('../services/analytics.service', () => ({
+  analyticsService: {
+    listAnalytics: jest.fn(),
+  },
+}))
+
+import app from '../app'
+import { analyticsService } from '../services/analytics.service'
+
+const mockListAnalytics = analyticsService.listAnalytics as jest.Mock
 
 describe('Backend API', () => {
-  let app: express.Application
-
-  beforeAll(() => {
-    app = createTestApp()
+  afterEach(() => {
+    jest.clearAllMocks()
   })
 
   describe('GET /health', () => {
@@ -45,37 +24,55 @@ describe('Backend API', () => {
 
       expect(response.body).toMatchObject({
         status: 'ok',
-        service: 'analytics-backend'
+        service: 'analytics-backend',
       })
       expect(response.body.timestamp).toBeDefined()
+      expect(response.body.version).toBeDefined()
     })
   })
 
   describe('GET /api/analytics', () => {
     it('should return analytics data', async () => {
+      const sampleData = [
+        { id: '1', metric: 'users', value: 100, timestamp: new Date().toISOString() },
+        { id: '2', metric: 'sessions', value: 250, timestamp: new Date().toISOString() },
+      ]
+
+      mockListAnalytics.mockResolvedValue({
+        data: sampleData,
+        meta: { count: sampleData.length },
+      })
+
       const response = await request(app)
         .get('/api/analytics')
         .expect(200)
 
       expect(response.body).toMatchObject({
         success: true,
-        data: expect.any(Array)
+        data: expect.any(Array),
+        meta: { count: sampleData.length },
       })
 
       expect(response.body.data).toHaveLength(2)
       expect(response.body.data[0]).toMatchObject({
-        id: expect.any(Number),
+        id: expect.any(String),
         metric: expect.any(String),
-        value: expect.any(Number)
+        value: expect.any(Number),
+        timestamp: expect.any(String),
       })
     })
   })
 
   describe('Error handling', () => {
     it('should handle 404 routes', async () => {
-      await request(app)
+      const response = await request(app)
         .get('/nonexistent')
         .expect(404)
+
+      expect(response.body).toMatchObject({
+        success: false,
+        error: expect.stringContaining('Route not found'),
+      })
     })
   })
 })

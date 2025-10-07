@@ -1,41 +1,22 @@
 import { render, screen } from '@testing-library/react'
-import Home from '../pages/index'
+import Home from '../app/page'
 import '@testing-library/jest-dom'
 
-// Mock Next.js router
-jest.mock('next/router', () => ({
+// Mock Next.js navigation for App Router
+jest.mock('next/navigation', () => ({
   useRouter() {
     return {
-      route: '/',
-      pathname: '/',
-      query: {},
-      asPath: '/',
       push: jest.fn(),
-      pop: jest.fn(),
-      reload: jest.fn(),
+      replace: jest.fn(),
+      prefetch: jest.fn(),
       back: jest.fn(),
-      prefetch: jest.fn().mockResolvedValue(undefined),
-      beforePopState: jest.fn(),
-      events: {
-        on: jest.fn(),
-        off: jest.fn(),
-        emit: jest.fn(),
-      },
+      forward: jest.fn(),
     }
   },
+  usePathname() {
+    return '/'
+  },
 }))
-
-// Mock component since it doesn't exist yet
-jest.mock('../pages/index', () => {
-  return function MockHome() {
-    return (
-      <div>
-        <h1>Analytics Platform</h1>
-        <p>Welcome to the Analytics Platform</p>
-      </div>
-    )
-  }
-})
 
 describe('Home Page', () => {
   it('renders the home page', () => {
@@ -47,6 +28,10 @@ describe('Home Page', () => {
     
     const description = screen.getByText('Welcome to the Analytics Platform')
     expect(description).toBeInTheDocument()
+  })
+
+  it('renders without crashing', () => {
+    expect(() => render(<Home />)).not.toThrow()
   })
 
   it('has correct page structure', () => {

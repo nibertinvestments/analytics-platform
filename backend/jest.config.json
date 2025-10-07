@@ -6,6 +6,10 @@
     "**/__tests__/**/*.ts",
     "**/*.test.ts"
   ],
+  "testPathIgnorePatterns": [
+    "\\\\node_modules\\\\",
+    "<rootDir>/src/__tests__/setup.ts"
+  ],
   "transform": {
     "^.+\\.ts$": "ts-jest"
   },
