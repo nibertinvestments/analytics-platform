@@ -5,6 +5,8 @@ on:
     # Run daily at 2 AM UTC
     - cron: '0 2 * * *'
   workflow_dispatch:
+  pull_request:
+    types: [opened, synchronize, reopened]
 
 jobs:
   dependency-audit:
@@ -40,13 +42,15 @@ jobs:
   dependabot-auto-merge:
     name: Auto-merge Dependabot PRs
     runs-on: ubuntu-latest
-    if: github.actor == 'dependabot[bot]'
+    if: github.actor == 'dependabot[bot]' && github.event_name == 'pull_request'
     
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
       - name: Enable auto-merge for Dependabot PRs
-        run: gh pr merge --auto --merge "$PR_URL"
+        run: gh pr merge --auto --merge "${{ github.event.pull_request.html_url }}"
         env:
-          PR_URL: ${{ github.event.pull_request.html_url }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   security-analysis:

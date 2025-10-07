@@ -22,11 +22,16 @@ const parseDate = (value: unknown): Date | undefined => {
 
 export const listAnalytics = async (req: Request, res: Response, next: NextFunction) => {
   try {
+    const metric = typeof req.query['metric'] === 'string' ? req.query['metric'] : undefined
+    const limit = parseLimit(req.query['limit'])
+    const startDate = parseDate(req.query['start'])
+    const endDate = parseDate(req.query['end'])
+
     const result = await analyticsService.listAnalytics({
-      metric: typeof req.query.metric === 'string' ? req.query.metric : undefined,
-      limit: parseLimit(req.query.limit),
-      startDate: parseDate(req.query.start),
-      endDate: parseDate(req.query.end),
+      ...(metric && { metric }),
+      ...(limit && { limit }),
+      ...(startDate && { startDate }),
+      ...(endDate && { endDate }),
     })
 
     res.status(200).json({
